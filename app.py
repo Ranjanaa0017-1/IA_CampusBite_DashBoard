@@ -743,7 +743,8 @@ elif page == "🤖  Classification Model":
     def run_rf(df):
         enc_df, feature_cols = encode_df(df)
         X = enc_df[feature_cols]
-        y = enc_df["subscription_interest"]
+        # Keep original string labels (No/Yes) so classification_report keys match
+        y = df["subscription_interest"].values
         X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)
         model = RandomForestClassifier(n_estimators=200, max_depth=10, random_state=42)
         model.fit(X_tr, y_tr)
@@ -793,9 +794,11 @@ elif page == "🤖  Classification Model":
         st.plotly_chart(styled_fig(fig), use_container_width=True)
         st.caption("meal_skip_freq and current_satisfaction are the strongest predictors of subscription interest.")
 
-    # Per-class report
+    # Per-class report — use actual class labels from report, not hardcoded strings
     st.markdown("#### Classification Report by Class")
-    rep_df = pd.DataFrame(report).T.loc[["No", "Yes"]][["precision", "recall", "f1-score", "support"]]
+    skip_keys = {"accuracy", "macro avg", "weighted avg"}
+    class_labels = [k for k in report.keys() if k not in skip_keys]
+    rep_df = pd.DataFrame(report).T.loc[class_labels][["precision", "recall", "f1-score", "support"]]
     rep_df = rep_df.round(3).reset_index().rename(columns={"index": "Class"})
     st.dataframe(rep_df, use_container_width=True, hide_index=True)
 
