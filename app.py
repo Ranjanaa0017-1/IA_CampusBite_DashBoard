@@ -776,7 +776,7 @@ elif page == "🤖  Classification Model":
     c1, c2 = st.columns(2)
     with c1:
         # Confusion matrix
-        labels = sorted(y_te.unique())
+        labels = sorted(np.unique(y_te))
         fig = px.imshow(cm, x=labels, y=labels, text_auto=True,
                         color_continuous_scale=["#FEF3EC", C_ACCENT],
                         labels={"x": "Predicted", "y": "Actual"},
