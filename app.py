@@ -292,10 +292,11 @@ def page_header(eyebrow: str, title: str, desc: str = ""):
 
 def kpi(label: str, value: str, note: str = ""):
     """Render a KPI card."""
+    note_html = f"<div class='kpi-note'>{note}</div>" if note else ""
     return f"""<div class="kpi-card">
         <div class="kpi-label">{label}</div>
         <div class="kpi-value">{value}</div>
-        {"<div class='kpi-note'>" + note + "</div>" if note else ""}
+        {note_html}
     </div>"""
 
 
